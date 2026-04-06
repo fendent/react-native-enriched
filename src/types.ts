@@ -232,6 +232,9 @@ export interface HtmlStyle {
     marginLeft?: number;
     boxColor?: ColorValue;
   };
+  image?: {
+    verticalAlign?: 'baseline' | 'bottom';
+  };
 }
 
 // Event types
@@ -450,6 +453,8 @@ export interface EnrichedTextInputProps extends Omit<ViewProps, 'children'> {
   cursorColor?: ColorValue;
   selectionColor?: ColorValue;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  autoCorrect?: boolean;
+  spellCheck?: boolean;
   htmlStyle?: HtmlStyle;
   style?: ViewStyle | TextStyle;
   scrollEnabled?: boolean;
