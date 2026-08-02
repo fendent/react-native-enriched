@@ -375,6 +375,32 @@ static NSString *const MentionAttributeName = @"EnrichedMention";
   return mentionRange;
 }
 
+// A finalized mention is an atomic unit: a single backspace/delete that lands
+// on any character of it removes the whole mention rather than one character.
+// Only finalized mentions carry MentionAttributeName (in-progress typing does
+// not), so this never interferes with editing a mention that is still being
+// typed.
+- (BOOL)tryHandlingMentionBackspaceInRange:(NSRange)range
+                           replacementText:(NSString *)text {
+  // Only a deletion of a single character (backspace / forward delete).
+  if (![text isEqualToString:@""] || range.length != 1) {
+    return NO;
+  }
+  if ([self getMentionParamsAt:range.location] == nullptr) {
+    return NO;
+  }
+  NSRange fullRange = [self getFullMentionRangeAt:range.location];
+  if (fullRange.length == 0) {
+    return NO;
+  }
+  [TextInsertionUtils replaceText:@""
+                               at:fullRange
+             additionalAttributes:nullptr
+                            input:self.input
+                    withSelection:YES];
+  return YES;
+}
+
 - (MentionStyleProps *)stylePropsWithParams:(MentionParams *)params {
   return [self.input->config mentionStylePropsForIndicator:params.indicator];
 }

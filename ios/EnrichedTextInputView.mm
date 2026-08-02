@@ -680,9 +680,10 @@ Class<RCTComponentViewProtocol> EnrichedTextInputViewCls(void) {
 
   if (newViewProps.htmlStyle.image.verticalAlign !=
       oldViewProps.htmlStyle.image.verticalAlign) {
-    [newConfig setImageVerticalAlign:
-                   [NSString fromCppString:newViewProps.htmlStyle.image
-                                               .verticalAlign]];
+    [newConfig
+        setImageVerticalAlign:[NSString
+                                  fromCppString:newViewProps.htmlStyle.image
+                                                    .verticalAlign]];
     stylePropChanged = YES;
   }
 
@@ -2073,12 +2074,17 @@ Class<RCTComponentViewProtocol> EnrichedTextInputViewCls(void) {
   H4Style *h4Style = stylesDict[@([H4Style getType])];
   H5Style *h5Style = stylesDict[@([H5Style getType])];
   H6Style *h6Style = stylesDict[@([H6Style getType])];
+  MentionStyle *mentionStyle = stylesDict[@([MentionStyle getType])];
 
   // some of the changes these checks do could interfere with later checks and
   // cause a crash so here we rely on short circuiting evaluation of the logical
   // expression. Either way it's not possible to have two of them come off at
   // the same time
   if (
+      // Atomic mention deletion: backspacing into a finalized mention removes
+      // the whole mention rather than one character.
+      [mentionStyle tryHandlingMentionBackspaceInRange:range
+                                       replacementText:text] ||
       // ZWS backspace handling for paragraph styles
       [ZeroWidthSpaceUtils handleBackspaceInRange:range
                                   replacementText:text
@@ -2375,8 +2381,7 @@ Class<RCTComponentViewProtocol> EnrichedTextInputViewCls(void) {
     targetY = CGRectGetMaxY(lineRect) - attachmentSize.height;
   } else {
     // baseline (default): align image bottom with the descender
-    targetY =
-        CGRectGetMaxY(lineRect) + font.descender - attachmentSize.height;
+    targetY = CGRectGetMaxY(lineRect) + font.descender - attachmentSize.height;
   }
   CGRect rect =
       CGRectMake(glyphRect.origin.x + textView.textContainerInset.left,

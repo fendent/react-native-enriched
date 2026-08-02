@@ -40,6 +40,8 @@
 - (MentionParams *)getMentionParamsAt:(NSUInteger)location;
 - (NSRange)getFullMentionRangeAt:(NSUInteger)location;
 - (NSValue *)getActiveMentionRange;
+- (BOOL)tryHandlingMentionBackspaceInRange:(NSRange)range
+                           replacementText:(NSString *)text;
 @end
 
 @interface HeadingStyleBase : StyleBase
