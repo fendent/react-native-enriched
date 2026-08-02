@@ -9,6 +9,56 @@
 // custom NSAttributedStringKey to differentiate from links
 static NSString *const MentionAttributeName = @"EnrichedMention";
 
+// Parse a "#RRGGBB" or "#RRGGBBAA" hex string into a UIColor, or nil.
+static UIColor *MentionColorFromHex(NSString *hex) {
+  if (hex == nil) {
+    return nil;
+  }
+  NSString *s = [hex hasPrefix:@"#"] ? [hex substringFromIndex:1] : hex;
+  if (s.length != 6 && s.length != 8) {
+    return nil;
+  }
+  unsigned int value = 0;
+  if (![[NSScanner scannerWithString:s] scanHexInt:&value]) {
+    return nil;
+  }
+  CGFloat r, g, b, a;
+  if (s.length == 8) {
+    r = ((value >> 24) & 0xFF) / 255.0;
+    g = ((value >> 16) & 0xFF) / 255.0;
+    b = ((value >> 8) & 0xFF) / 255.0;
+    a = (value & 0xFF) / 255.0;
+  } else {
+    r = ((value >> 16) & 0xFF) / 255.0;
+    g = ((value >> 8) & 0xFF) / 255.0;
+    b = (value & 0xFF) / 255.0;
+    a = 1.0;
+  }
+  return [UIColor colorWithRed:r green:g blue:b alpha:a];
+}
+
+// Extract an optional per-mention text colour (a "#hex" string under the
+// "color" key) from a mention's JSON attributes string; nil if
+// absent/unparseable.
+static UIColor *MentionTextColorFromAttributes(NSString *attributes) {
+  if (attributes == nil) {
+    return nil;
+  }
+  NSData *data = [attributes dataUsingEncoding:NSUTF8StringEncoding];
+  if (data == nil) {
+    return nil;
+  }
+  id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+  if (![json isKindOfClass:[NSDictionary class]]) {
+    return nil;
+  }
+  id color = ((NSDictionary *)json)[@"color"];
+  if (![color isKindOfClass:[NSString class]]) {
+    return nil;
+  }
+  return MentionColorFromHex((NSString *)color);
+}
+
 @implementation MentionStyle {
   NSValue *_activeMentionRange;
   NSString *_activeMentionIndicator;
@@ -49,10 +99,18 @@ static NSString *const MentionAttributeName = @"EnrichedMention";
   MentionStyleProps *styleProps =
       [self.input->config mentionStylePropsForIndicator:params.indicator];
 
+  // Per-mention text colour override (e.g. a role's colour) passed via the
+  // mention's "color" attribute; falls back to the indicator's configured
+  // colour.
+  UIColor *textColor = MentionTextColorFromAttributes(params.attributes);
+  if (textColor == nil) {
+    textColor = styleProps.color;
+  }
+
   NSMutableDictionary *newAttrs = [@{
-    NSForegroundColorAttributeName : styleProps.color,
-    NSUnderlineColorAttributeName : styleProps.color,
-    NSStrikethroughColorAttributeName : styleProps.color,
+    NSForegroundColorAttributeName : textColor,
+    NSUnderlineColorAttributeName : textColor,
+    NSStrikethroughColorAttributeName : textColor,
     NSBackgroundColorAttributeName :
         [styleProps.backgroundColor colorWithAlphaIfNotTransparent:0.4],
   } mutableCopy];
