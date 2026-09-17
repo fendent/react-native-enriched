@@ -58,7 +58,7 @@ export const EnrichedTextInput = ({
   selectionColor,
   style,
   autoCapitalize = ENRICHED_TEXT_INPUT_DEFAULT_PROPS.autoCapitalize,
-  autoCorrect,
+  autoCorrect = true,
   spellCheck,
   htmlStyle = ENRICHED_TEXT_INPUT_DEFAULT_PROPS.htmlStyle,
   linkRegex: _linkRegex,
@@ -343,7 +343,7 @@ export const EnrichedTextInput = ({
       style={style}
       autoCapitalize={autoCapitalize}
       autoCorrect={autoCorrect}
-      spellCheck={spellCheck}
+      spellCheck={spellCheck ?? autoCorrect}
       htmlStyle={normalizedHtmlStyle}
       linkRegex={linkRegex}
       onInputFocus={onFocus}
