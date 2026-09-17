@@ -21,7 +21,7 @@
 }
 
 - (void)applyStyling:(NSRange)range {
-  [self.input->textView.textStorage
+  [self.host.textView.textStorage
       enumerateAttribute:NSFontAttributeName
                  inRange:range
                  options:0
@@ -30,20 +30,38 @@
                 UIFont *currentFont = (UIFont *)value;
                 if (currentFont == nullptr)
                   return;
-                UIFont *monoFont = [[[self.input->config monospacedFont]
+                UIFont *monoFont = [[[self.host.config monospacedFont]
                     withFontTraits:currentFont] setSize:currentFont.pointSize];
                 if (monoFont != nullptr) {
-                  [self.input->textView.textStorage
+                  [self.host.textView.textStorage
                       addAttribute:NSFontAttributeName
                              value:monoFont
                              range:subRange];
                 }
               }];
 
-  [self.input->textView.textStorage
+  [self.host.textView.textStorage
       addAttribute:NSForegroundColorAttributeName
-             value:[self.input->config codeBlockFgColor]
+             value:[self.host.config codeBlockFgColor]
              range:range];
+}
+
+- (BOOL)appliesStylingToTyping {
+  return YES;
+}
+
+- (void)applyStylingToTypingAttrs:(NSMutableDictionary *)attributes {
+  UIFont *currentFont =
+      attributes[NSFontAttributeName] ?: [self.host.config primaryFont];
+  UIFont *monoFont = [[[self.host.config monospacedFont]
+      withFontTraits:currentFont] setSize:currentFont.pointSize];
+  if (monoFont != nil) {
+    attributes[NSFontAttributeName] = monoFont;
+  }
+  UIColor *fgColor = [self.host.config codeBlockFgColor];
+  if (fgColor != nil) {
+    attributes[NSForegroundColorAttributeName] = fgColor;
+  }
 }
 
 @end

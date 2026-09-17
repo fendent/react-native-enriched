@@ -21,12 +21,16 @@ body {
 }
 
 .container {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
   padding: 60px 16px 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.enriched-text-container {
+  width: 100%;
 }
 
 .app-title {
@@ -35,6 +39,16 @@ body {
   color: var(--primary);
   text-align: center;
   margin: 0 0 24px;
+}
+
+.editor-mention-host {
+  position: relative;
+  width: 100%;
+  align-self: stretch;
+}
+
+.editor-mention-host--mention-open {
+  z-index: 100;
 }
 
 .btn {

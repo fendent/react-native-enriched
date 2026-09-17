@@ -1,12 +1,10 @@
 import { codegenNativeComponent, codegenNativeCommands } from 'react-native';
 import type {
-  BubblingEventHandler,
-  DirectEventHandler,
-  Float,
-  Int32,
-  UnsafeMixed,
-} from 'react-native/Libraries/Types/CodegenTypes';
-import type { ColorValue, HostComponent, ViewProps } from 'react-native';
+  CodegenTypes,
+  ColorValue,
+  HostComponent,
+  ViewProps,
+} from 'react-native';
 import React from 'react';
 
 export interface LinkNativeRegex {
@@ -123,13 +121,14 @@ export interface OnChangeStateEvent {
     isConflicting: boolean;
     isBlocking: boolean;
   };
+  alignment: string;
 }
 
 export interface OnLinkDetected {
   text: string;
   url: string;
-  start: Int32;
-  end: Int32;
+  start: CodegenTypes.Int32;
+  end: CodegenTypes.Int32;
 }
 
 export interface OnMentionDetectedInternal {
@@ -146,18 +145,18 @@ export interface OnMentionDetected {
 
 export interface OnMentionEvent {
   indicator: string;
-  text: UnsafeMixed;
+  text: CodegenTypes.UnsafeMixed;
 }
 
 export interface OnChangeSelectionEvent {
-  start: Int32;
-  end: Int32;
+  start: CodegenTypes.Int32;
+  end: CodegenTypes.Int32;
   text: string;
 }
 
 export interface OnRequestHtmlResultEvent {
-  requestId: Int32;
-  html: UnsafeMixed;
+  requestId: CodegenTypes.Int32;
+  html: CodegenTypes.UnsafeMixed;
 }
 
 export interface OnSubmitEditing {
@@ -172,11 +171,16 @@ export interface ContextMenuItemConfig {
   text: string;
 }
 
+export interface TextShortcut {
+  trigger: string;
+  style: string;
+}
+
 export interface OnContextMenuItemPressEvent {
   itemText: string;
   selectedText: string;
-  selectionStart: Int32;
-  selectionEnd: Int32;
+  selectionStart: CodegenTypes.Int32;
+  selectionEnd: CodegenTypes.Int32;
   styleState: {
     bold: {
       isActive: boolean;
@@ -273,31 +277,32 @@ export interface OnContextMenuItemPressEvent {
       isConflicting: boolean;
       isBlocking: boolean;
     };
+    alignment: string;
   };
 }
 
 interface TargetedEvent {
-  target: Int32;
+  target: CodegenTypes.Int32;
 }
 
 export interface PastedImage {
   uri: string;
   type: string;
-  width: Float;
-  height: Float;
+  width: CodegenTypes.Float;
+  height: CodegenTypes.Float;
 }
 
 export interface OnPasteImagesEvent {
   images: {
     uri: string;
     type: string;
-    width: Float;
-    height: Float;
+    width: CodegenTypes.Float;
+    height: CodegenTypes.Float;
   }[];
 }
 
 type Heading = {
-  fontSize?: Float;
+  fontSize?: CodegenTypes.Float;
   bold?: boolean;
 };
 
@@ -310,13 +315,13 @@ export interface HtmlStyleInternal {
   h6?: Heading;
   blockquote?: {
     borderColor?: ColorValue;
-    borderWidth?: Float;
-    gapWidth?: Float;
+    borderWidth?: CodegenTypes.Float;
+    gapWidth?: CodegenTypes.Float;
     color?: ColorValue;
   };
   codeblock?: {
     color?: ColorValue;
-    borderRadius?: Float;
+    borderRadius?: CodegenTypes.Float;
     backgroundColor?: ColorValue;
   };
   code?: {
@@ -329,23 +334,23 @@ export interface HtmlStyleInternal {
   };
   // This is a workaround for the fact that codegen does not support Records.
   // On native Android side this will become a ReadableMap, on native iOS we can work with a folly::dynamic object.
-  mention?: UnsafeMixed;
+  mention?: CodegenTypes.UnsafeMixed;
   ol?: {
-    gapWidth?: Float;
-    marginLeft?: Float;
+    gapWidth?: CodegenTypes.Float;
+    marginLeft?: CodegenTypes.Float;
     markerFontWeight?: string;
     markerColor?: ColorValue;
   };
   ul?: {
     bulletColor?: ColorValue;
-    bulletSize?: Float;
-    marginLeft?: Float;
-    gapWidth?: Float;
+    bulletSize?: CodegenTypes.Float;
+    marginLeft?: CodegenTypes.Float;
+    gapWidth?: CodegenTypes.Float;
   };
   ulCheckbox?: {
-    gapWidth?: Float;
-    boxSize?: Float;
-    marginLeft?: Float;
+    gapWidth?: CodegenTypes.Float;
+    boxSize?: CodegenTypes.Float;
+    marginLeft?: CodegenTypes.Float;
     boxColor?: ColorValue;
   };
 }
@@ -367,31 +372,33 @@ export interface NativeProps extends ViewProps {
   scrollEnabled?: boolean;
   linkRegex?: LinkNativeRegex;
   contextMenuItems?: ReadonlyArray<Readonly<ContextMenuItemConfig>>;
+  textShortcuts: ReadonlyArray<Readonly<TextShortcut>>;
   returnKeyType?: string;
   returnKeyLabel?: string;
   submitBehavior?: string;
+  allowFontScaling?: boolean;
 
   // event callbacks
-  onInputFocus?: DirectEventHandler<TargetedEvent>;
-  onInputBlur?: DirectEventHandler<TargetedEvent>;
-  onChangeText?: DirectEventHandler<OnChangeTextEvent>;
-  onChangeHtml?: DirectEventHandler<OnChangeHtmlEvent>;
-  onChangeState?: DirectEventHandler<OnChangeStateEvent>;
-  onLinkDetected?: DirectEventHandler<OnLinkDetected>;
-  onMentionDetected?: DirectEventHandler<OnMentionDetectedInternal>;
-  onMention?: DirectEventHandler<OnMentionEvent>;
-  onChangeSelection?: DirectEventHandler<OnChangeSelectionEvent>;
-  onRequestHtmlResult?: DirectEventHandler<OnRequestHtmlResultEvent>;
-  onInputKeyPress?: DirectEventHandler<OnKeyPressEvent>;
-  onPasteImages?: DirectEventHandler<OnPasteImagesEvent>;
-  onContextMenuItemPress?: DirectEventHandler<OnContextMenuItemPressEvent>;
-  onSubmitEditing?: BubblingEventHandler<OnSubmitEditing>;
+  onInputFocus?: CodegenTypes.DirectEventHandler<TargetedEvent>;
+  onInputBlur?: CodegenTypes.DirectEventHandler<TargetedEvent>;
+  onChangeText?: CodegenTypes.DirectEventHandler<OnChangeTextEvent>;
+  onChangeHtml?: CodegenTypes.DirectEventHandler<OnChangeHtmlEvent>;
+  onChangeState?: CodegenTypes.DirectEventHandler<OnChangeStateEvent>;
+  onLinkDetected?: CodegenTypes.DirectEventHandler<OnLinkDetected>;
+  onMentionDetected?: CodegenTypes.DirectEventHandler<OnMentionDetectedInternal>;
+  onMention?: CodegenTypes.DirectEventHandler<OnMentionEvent>;
+  onChangeSelection?: CodegenTypes.DirectEventHandler<OnChangeSelectionEvent>;
+  onRequestHtmlResult?: CodegenTypes.DirectEventHandler<OnRequestHtmlResultEvent>;
+  onInputKeyPress?: CodegenTypes.DirectEventHandler<OnKeyPressEvent>;
+  onPasteImages?: CodegenTypes.DirectEventHandler<OnPasteImagesEvent>;
+  onContextMenuItemPress?: CodegenTypes.DirectEventHandler<OnContextMenuItemPressEvent>;
+  onSubmitEditing?: CodegenTypes.BubblingEventHandler<OnSubmitEditing>;
 
   // Style related props - used for generating proper setters in component's manager
   // These should not be passed as regular props
   color?: ColorValue;
-  fontSize?: Float;
-  lineHeight?: Float;
+  fontSize?: CodegenTypes.Float;
+  lineHeight?: CodegenTypes.Float;
   fontFamily?: string;
   fontWeight?: string;
   fontStyle?: string;
@@ -415,8 +422,8 @@ interface NativeCommands {
   setValue: (viewRef: React.ElementRef<ComponentType>, text: string) => void;
   setSelection: (
     viewRef: React.ElementRef<ComponentType>,
-    start: Int32,
-    end: Int32
+    start: CodegenTypes.Int32,
+    end: CodegenTypes.Int32
   ) => void;
 
   // Text formatting commands
@@ -441,21 +448,21 @@ interface NativeCommands {
   ) => void;
   addLink: (
     viewRef: React.ElementRef<ComponentType>,
-    start: Int32,
-    end: Int32,
+    start: CodegenTypes.Int32,
+    end: CodegenTypes.Int32,
     text: string,
     url: string
   ) => void;
   removeLink: (
     viewRef: React.ElementRef<ComponentType>,
-    start: Int32,
-    end: Int32
+    start: CodegenTypes.Int32,
+    end: CodegenTypes.Int32
   ) => void;
   addImage: (
     viewRef: React.ElementRef<ComponentType>,
     uri: string,
-    width: Float,
-    height: Float
+    width: CodegenTypes.Float,
+    height: CodegenTypes.Float
   ) => void;
   startMention: (
     viewRef: React.ElementRef<ComponentType>,
@@ -469,7 +476,11 @@ interface NativeCommands {
   ) => void;
   requestHTML: (
     viewRef: React.ElementRef<ComponentType>,
-    requestId: Int32
+    requestId: CodegenTypes.Int32
+  ) => void;
+  setTextAlignment: (
+    viewRef: React.ElementRef<ComponentType>,
+    alignment: string
   ) => void;
 }
 
@@ -504,6 +515,7 @@ export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
     'startMention',
     'addMention',
     'requestHTML',
+    'setTextAlignment',
   ],
 });
 
