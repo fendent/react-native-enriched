@@ -668,7 +668,7 @@ export interface EnrichedTextInputProps extends Omit<ViewProps, 'children'> {
   /** If false, disables auto-correct. Defaults `true`. */
   autoCorrect?: boolean;
 
-  /** If false, disables spell-check style (i.e. red underlines). The default value is inherited from the`autoCorrect` prop.
+  /** If false, disables spell-check style (i.e. red underlines). The default value is inherited from the `autoCorrect` prop.
    *
    * @platform ios
    */
