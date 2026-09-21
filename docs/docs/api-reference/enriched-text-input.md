@@ -643,11 +643,11 @@ cursor (caret) also uses this color.
 
 ### `spellCheck` {#spellcheck}
 
-If false, disables spell-check style (i.e. red underlines). The default value is inherited from the `autoCorrect` prop.
+If false, disables spell-check style (i.e. red underlines). The default value is inherited from the [`autoCorrect`](#autocorrect) prop.
 
-| Type      | Default       | Platforms |
-| --------- | ------------- | --------- |
-| `boolean` | `autoCorrect` | iOS       |
+| Type      | Default                       | Platforms |
+| --------- | ----------------------------- | --------- |
+| `boolean` | [`autoCorrect`](#autocorrect) | iOS       |
 
 ### `style` {#style}
 
